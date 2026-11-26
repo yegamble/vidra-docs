@@ -5,9 +5,9 @@ description: A one-way importer moves a PeerTube instance into Vidra. It is not 
 
 # Migrating from PeerTube to Vidra
 
-Vidra is a **clean-room implementation, not a PeerTube fork**, and it is **not
-API-compatible with PeerTube**. Your existing PeerTube clients, embeds and
-plugins will not work against a Vidra instance.
+Vidra is a clean-room implementation with its own API.
+Existing PeerTube clients need a Vidra integration. Viewers can follow
+supported PeerTube watch and embed links after import. [Guide for returning viewers](./returning-users.md)
 
 What Vidra ships is **migration tooling**: a one-way importer that reads your
 PeerTube instance's PostgreSQL database directly and carries the data across. It
@@ -50,9 +50,9 @@ it says otherwise.
 
 | Data | Carried | Notes |
 |---|---|---|
-| Users and accounts | Yes | Username, email, role, verification state — **and the bcrypt password hash, verbatim**. Users keep their passwords. |
+| Users and accounts | Yes | The importer carries the username, email, role, verification state and any local bcrypt password hash. Accounts with a PeerTube authenticator are held for recovery. Source suspensions persist. |
 | Channels | Yes | Names, descriptions, support text |
-| Videos | Yes | Metadata, privacy, tags, categories, languages, original publication date |
+| Videos | Yes | Metadata, privacy, tags, categories, languages, publication time on the source and, when known, first publication elsewhere |
 | Video renditions | Yes | The HLS quality ladder's rungs, in reference mode |
 | Comments | Yes | Full thread trees, parent-child preserved |
 | Playlists and items | Yes | Metadata and ordered items |
@@ -64,19 +64,12 @@ it says otherwise.
 | Category taxonomy | Yes | Including a `peertube-plugin-categories` custom taxonomy — see below |
 | Avatars and banners | Yes | Fetched from a mounted source root, or over HTTP from the source instance |
 | Video posters and storyboards | Yes | The same way |
-| **Moderation state** | **No, deliberately** | Video blacklist, account and server blocklists, abuse reports |
-| **Notification settings and watch history** | **No, deliberately** | |
+| Moderation state | Partial | Source account suspensions and video blacklist entries carry over. Review abuse reports and account/server blocklists separately. |
+| Watch history | Partial | Local-video resume positions and timestamps can carry over. Review notification settings separately. |
 | Original-file provenance (`videoSource`) | **No** | Simply unread today |
-| Federation peers | Manual | ActivityPub followers need to re-follow after cutover |
+| Remote followers | Partial | Accepted remote follows of local channels can carry over. Remote follows that target an account are unsupported. |
 | OAuth clients | Manual | Third-party apps must be re-registered |
 | PeerTube plugins | **No** | Vidra has no plugin system that could run them |
-
-:::tip Passwords come across
-This is the opposite of what most migrations require. The importer carries the
-source's bcrypt hash verbatim and Vidra verifies against it, so your users sign
-in with the passwords they already have. There is no bulk password-reset email
-to send.
-:::
 
 ## It is idempotent, resumable, and re-runnable
 

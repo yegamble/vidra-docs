@@ -85,8 +85,10 @@ docker run --rm --network vidra_default --env-file env/production.env <image> â€
 
 Before treating a difference as a bug, check it is not one of these.
 
-**Deliberately not carried:** moderation state (video blacklist, account and
-server blocklists, abuse reports), user notification settings, watch history.
+**Partial coverage:** inspect the `user_suspension`, `user_mfa_hold`,
+`video_block` and `watch_history` counters. These cover source suspensions,
+authenticator holds, video blacklist entries and local-video watch history.
+Review account/server blocklists, abuse reports and notification settings separately.
 
 **Not carried, just unread:** `videoSource` â€” original-file provenance records.
 
@@ -167,17 +169,18 @@ win.
 
 ## Users cannot sign in
 
-Check the obvious thing first: **passwords do come across**. The importer carries
-the source's bcrypt hash verbatim and Vidra verifies against it, so a user
-signing in with their existing password should work. If it does not:
+Check the import record for the account. A username collision can leave an
+existing Vidra account in place. For an import-owned, active local-password
+account, the final source-authoritative run can replace a rehearsal password
+with the last PeerTube password.
 
-- Confirm the account actually imported (`skip` may have left an existing Vidra
-  row with that username in place).
-- Confirm the instance is claimed. An unclaimed instance answers
-  `403 owner_claim_required` on **every** signup path, and that includes anything
-  the import would create. See [Quickstart](../start/quickstart.md).
-- If the password was changed on the source *after* your last run, only a
-  `source_authoritative` run carries the new hash.
+Check for a source suspension or `user_mfa_hold` before directing someone to
+reset their password. A PeerTube authenticator enrollment causes a newly
+imported account to be held inactive. An administrator must verify the account
+recovery and coordinate reactivation and enrollment in Vidra. A source account
+that used only plugin authentication has no local password to verify.
+Share the [guide for returning users](./returning-users.md) for the
+sign-in, password reset and support paths.
 
 ## The run is slow
 

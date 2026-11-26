@@ -47,6 +47,7 @@ const sidebars: SidebarsConfig = {
       label: 'Migrate from PeerTube',
       items: [
         'migration/overview',
+        'migration/returning-users',
         'migration/planning',
         'migration/api-migration',
         'migration/manual-migration',
