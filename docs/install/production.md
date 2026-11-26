@@ -316,6 +316,41 @@ and compare its root CID and file hashes. Seek and decode the recovered video
 before authorizing peering.
 [Dedicated reference-node recovery](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/runtime/README.md#withdraw-roll-back-and-recover)
 
+#### Rebuilding a pin after losing the primary bucket
+
+Backblaze B2 assigns its replicas different file IDs. Copying or uploading the
+same bytes into a replacement primary also creates a new version. The saved
+manifest still names the lost primary's versions. Keep it and its expected
+directory CID as the record of what was approved.
+[Backblaze replication restrictions](https://www.backblaze.com/docs/cloud-storage-cloud-replication#restrictions)
+and [S3 copy response](https://www.backblaze.com/apidocs/s3-copy-object).
+
+1. Start with an empty, offline Kubo repository. Preserve the saved journal
+   and check the video's current approval, visibility and generation before
+   rebuilding it. Withdrawn videos stay offline.
+2. For every key in the saved manifest, locate the corresponding immutable
+   recovery version. Use the saved source-to-replica version map if available.
+   Read that specific version, then compare its full-file SHA-256 and byte
+   length with the saved entry. Preserve the complete relative HLS paths and
+   playlist bytes. Keep the video offline if any entry is missing or differs.
+3. Point a private recovery origin at the verified bucket with scoped read
+   access. The native preparer inspects the current version at each key. If the
+   verified copies are historical, restore those specific versions to their
+   original keys in an empty private primary, then verify the new versions.
+   Prepare a candidate for the bucket the origin will read, retaining the video
+   UUID, master key, paths, lengths and hashes. Regenerate each opaque origin ID
+   with its replacement version ID. Review that manifest for the individual
+   video and record the old-to-new version mapping in the recovery kit.
+   [Native manifest preparer](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/PREPARATION.md)
+4. Rebuild only the approved pin with the saved publisher, Kubo version and
+   UnixFS import settings. Identical paths, bytes and import settings reproduce
+   the same directory CID even when the storage locators change. Compare the
+   resulting CID with the saved one. After restart, cold-read every file through
+   the replacement origin, verify its hash, seek and decode playback, and check
+   that the recursive pin inventory matches the approved roots. Resume peering
+   only after these checks pass and distribution is still authorized.
+   [IPFS content identifiers](https://docs.ipfs.tech/concepts/content-addressing/)
+
 ## Disaster recovery, in the non-obvious order
 
 `restore.sh` **refuses to run while `deploy/Caddyfile.local` is missing** — the
