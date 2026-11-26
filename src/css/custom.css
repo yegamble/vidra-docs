@@ -1,0 +1,250 @@
+
+
+
+:root {
+  --ifm-color-primary: #0b7ea3;
+  --ifm-color-primary-dark: #0a7193;
+  --ifm-color-primary-darker: #0a6b8c;
+  --ifm-color-primary-darkest: #085873;
+  --ifm-color-primary-light: #0c8bb3;
+  --ifm-color-primary-lighter: #0d91ba;
+  --ifm-color-primary-lightest: #10a4d3;
+
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-font-color-base: #0c2136;
+  --ifm-heading-color: #0c2136;
+  --ifm-code-font-size: 95%;
+  --ifm-toc-border-color: #e2e6e9;
+  --ifm-hr-border-color: #e2e6e9;
+  --ifm-table-border-color: #e2e6e9;
+  --ifm-link-hover-color: #0a6b8c;
+  --docusaurus-highlighted-code-line-bg: rgba(11, 126, 163, 0.08);
+
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Helvetica Neue', Arial, sans-serif;
+  --ifm-font-family-monospace: ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  
+  --vidra-canvas: #f5f5f7;
+  --vidra-surface: #eef7fb;
+  --vidra-hairline: #e2e6e9;
+  --vidra-text-secondary: #4c6478;
+  --vidra-text-label: #5c7285;
+  --vidra-ink: #0c2136;
+  --vidra-slate: #1d466a;
+  --vidra-tint: rgba(11, 126, 163, 0.07);
+}
+
+
+:root {
+  --ifm-color-emphasis-100: #f5f5f7;
+  --ifm-color-emphasis-200: #e2e6e9;
+}
+
+html[data-theme='light'] body,
+html:not([data-theme='dark']) body {
+  background-color: var(--vidra-canvas);
+}
+
+.main-wrapper,
+[data-theme='light'] .theme-doc-markdown,
+[data-theme='light'] .container article {
+  background-color: transparent;
+}
+
+
+[data-theme='dark'] {
+  --ifm-color-primary: #22bde3;
+  --ifm-color-primary-dark: #16aad0;
+  --ifm-color-primary-darker: #16a3e2;
+  --ifm-color-primary-darkest: #128aab;
+  --ifm-color-primary-light: #45c8e8;
+  --ifm-color-primary-lighter: #63d2ed;
+  --ifm-color-primary-lightest: #8adcf1;
+
+  --ifm-background-color: #0c2136;
+  --ifm-background-surface-color: #14293b;
+  --ifm-font-color-base: #e6f6fa;
+  --ifm-heading-color: #e6f6fa;
+  --ifm-toc-border-color: #1d466a;
+  --ifm-hr-border-color: #1d466a;
+  --ifm-table-border-color: #1d466a;
+  --ifm-link-hover-color: #63d2ed;
+  --docusaurus-highlighted-code-line-bg: rgba(34, 189, 227, 0.12);
+
+  --vidra-canvas: #0c2136;
+  --vidra-surface: #14293b;
+  --vidra-hairline: #1d466a;
+  --vidra-text-secondary: #8fb4c9;
+  --vidra-text-label: #8fb4c9;
+  --vidra-ink: #0c2136;
+  --vidra-slate: #18314f;
+  --vidra-tint: rgba(34, 189, 227, 0.1);
+
+  --ifm-color-emphasis-100: #14293b;
+  --ifm-color-emphasis-200: #18314f;
+}
+
+
+.navbar {
+  background-color: var(--vidra-ink);
+  border-bottom: 1px solid #18314f;
+  --ifm-navbar-link-color: #cfe3ee;
+  --ifm-navbar-link-hover-color: #22bde3;
+  --ifm-navbar-search-input-background-color: rgba(255, 255, 255, 0.08);
+  --ifm-navbar-search-input-color: #e6f6fa;
+  --ifm-navbar-search-input-placeholder-color: #8fb4c9;
+}
+
+.navbar__title,
+.navbar__brand {
+  color: #ffffff;
+}
+
+.navbar__link {
+  color: #cfe3ee;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: #22bde3;
+}
+
+.navbar__toggle,
+.navbar-sidebar__brand .clean-btn {
+  color: #cfe3ee;
+}
+
+.navbar-sidebar {
+  background-color: var(--ifm-background-color);
+}
+
+
+.hero--primary {
+  --ifm-hero-background-color: var(--vidra-ink);
+  --ifm-hero-text-color: #e6f6fa;
+  background-color: var(--vidra-ink);
+}
+
+.hero--primary .button--primary {
+  background-color: #22bde3;
+  border-color: #22bde3;
+  color: #0c2136;
+}
+
+.hero--primary .button--primary:hover {
+  background-color: #45c8e8;
+  border-color: #45c8e8;
+  color: #0c2136;
+}
+
+.hero--primary .button--secondary {
+  color: #e6f6fa;
+  background-color: transparent;
+  border-color: #4c6478;
+}
+
+.hero--primary .button--secondary:hover {
+  color: #0c2136;
+  background-color: #e6f6fa;
+  border-color: #e6f6fa;
+}
+
+
+.menu__link:hover {
+  background-color: var(--vidra-tint);
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: var(--vidra-tint);
+}
+
+
+table thead tr {
+  background-color: var(--vidra-tint);
+}
+
+table tbody tr:nth-child(even) {
+  background-color: var(--vidra-surface);
+}
+
+
+:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+
+.markdown {
+  --ifm-leading: 1.65;
+}
+
+.markdown > p,
+.markdown > ul,
+.markdown > ol {
+  max-width: 75ch;
+}
+
+.theme-doc-footer,
+.theme-last-updated {
+  color: var(--vidra-text-label);
+}
+
+
+.docusaurus-mermaid-container {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.docusaurus-mermaid-container svg text {
+  font-size: 14px;
+}
+
+
+[data-theme='dark'] .docusaurus-mermaid-container svg text,
+[data-theme='dark'] .docusaurus-mermaid-container .cluster text,
+[data-theme='dark'] .docusaurus-mermaid-container .actor > text,
+[data-theme='dark'] .docusaurus-mermaid-container .note > text,
+[data-theme='dark'] .docusaurus-mermaid-container .nodeLabel,
+[data-theme='dark'] .docusaurus-mermaid-container .messageText {
+  fill: #e6f6fa !important;
+  color: #e6f6fa !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container .edgeLabel,
+[data-theme='dark'] .docusaurus-mermaid-container .edgeLabel p,
+[data-theme='dark'] .docusaurus-mermaid-container .edgeLabel rect {
+  background-color: #0c2136 !important;
+  fill: #0c2136 !important;
+  color: #e6f6fa !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container .node rect,
+[data-theme='dark'] .docusaurus-mermaid-container .node circle,
+[data-theme='dark'] .docusaurus-mermaid-container .node polygon,
+[data-theme='dark'] .docusaurus-mermaid-container .node path,
+[data-theme='dark'] .docusaurus-mermaid-container .actor,
+[data-theme='dark'] .docusaurus-mermaid-container .note {
+  fill: #14293b !important;
+  stroke: #22bde3 !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container .cluster rect {
+  fill: #0f2740 !important;
+  stroke: #1d466a !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container .edgePath .path,
+[data-theme='dark'] .docusaurus-mermaid-container .flowchart-link,
+[data-theme='dark'] .docusaurus-mermaid-container .messageLine0,
+[data-theme='dark'] .docusaurus-mermaid-container .messageLine1 {
+  stroke: #8fb4c9 !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container marker path,
+[data-theme='dark'] .docusaurus-mermaid-container .marker {
+  fill: #8fb4c9 !important;
+  stroke: #8fb4c9 !important;
+}

@@ -1,0 +1,141 @@
+
+
+.hero {
+  background-color: #0c2136;
+  color: #e6f6fa;
+  padding: 5rem 0 4.5rem;
+  text-align: center;
+}
+
+.heroMark {
+  display: block;
+  margin: 0 auto 1.25rem;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.heroSubtitle {
+  font-size: 1.375rem;
+  line-height: 1.4;
+  color: #8fb4c9;
+  max-width: 34ch;
+  margin: 0 auto 2rem;
+}
+
+.heroButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.section {
+  background-color: var(--vidra-canvas);
+  padding: 4rem 0 4rem;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.75rem;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid var(--vidra-hairline);
+  border-radius: 12px;
+  background-color: var(--ifm-background-surface-color);
+  color: inherit;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.card:hover {
+  border-color: var(--ifm-color-primary);
+  text-decoration: none;
+  color: inherit;
+  transform: translateY(-2px);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.4rem;
+}
+
+.cardBody {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--vidra-text-secondary);
+  margin: 0;
+}
+
+.strip {
+  background-color: var(--ifm-background-color);
+  padding: 3.5rem 0 4.5rem;
+}
+
+.stripLede {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  max-width: 66ch;
+  margin-bottom: 2rem;
+}
+
+.proofGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vidra-hairline);
+}
+
+.proofTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.proofBody {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--vidra-text-secondary);
+  margin: 0;
+}
+
+.stripFooter {
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: var(--vidra-text-secondary);
+  max-width: 66ch;
+}
+
+@media screen and (max-width: 996px) {
+  .hero {
+    padding: 3rem 1rem;
+  }
+
+  .heroTitle {
+    font-size: 2.25rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.125rem;
+  }
+}
