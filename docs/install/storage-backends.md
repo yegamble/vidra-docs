@@ -57,7 +57,8 @@ non-current versions — thirty days is a sane default. Without one, a versioned
 bucket never reclaims anything, and a *successful* media-GC sweep frees exactly
 zero bytes while reporting thousands of deletions. This matters most on
 **Backblaze B2, whose buckets are versioned by default**. `vidra doctor` reports
-it under **object retention**.
+it under **object retention**. Preserve every S3 version used by an active
+[IPFS reference pin](#versioned-s3-reference-pins) when setting expiry rules.
 
 ### Transcode scratch
 
@@ -93,8 +94,8 @@ Kubo's RPC ports stay loopback-only. **Port 4001, TCP and UDP, must be open in
 your firewall** when the `ipfs` profile is on: it is the libp2p swarm, peers dial
 in, and a node nobody can reach only ever pushes.
 
-Mirror status: `GET /api/v1/ipfs/status` (admin). It answers
-`503 ipfs_disabled` when both `IPFS_ENABLED` and `IPFS_MIRROR_PRIVATE` are
+The admin endpoint for these Compose mirrors is `GET /api/v1/ipfs/status`.
+It answers `503 ipfs_disabled` when both `IPFS_ENABLED` and `IPFS_MIRROR_PRIVATE` are
 false.
 
 :::danger A public CID can outlive your node
@@ -102,6 +103,38 @@ A public CID may remain retrievable after the local node unpins it. That is an
 intentional disclosure boundary. Do not put anything on the public tier that you
 might later need to make unavailable — that is what the private tier is for.
 :::
+
+### Versioned S3 reference pins
+
+The deployment repository provides an opt-in operator CLI for a dedicated Kubo
+node with URLStore, Kubo's URL-backed block store. The node keeps directory
+metadata, hashes and block offsets locally. On a cold read, a private origin
+retrieves the approved byte range from the recorded S3 version. Keep the origin,
+Kubo RPC and local gateway on loopback.
+
+1. Rehearse offline with one synthetic HLS fixture, a fresh node identity and an
+   empty repository. Verify the root content identifier (CID), object hashes,
+   and playback after restart. Take the origin offline briefly and check that a
+   cold read fails, then restore it and verify the bytes again.
+   [Dedicated node setup and checks](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/runtime/README.md)
+2. For catalogue videos, preparation requires a core release supplying the
+   `ipfs_public_reference_videos` eligibility view, a post-v0.7.31 addition.
+   On a v0.7.31 installation, use the deployment tools for the synthetic
+   rehearsal. The native preparer accepts one eligible, versioned
+   Vidra HLS generation. Historical PeerTube imports with legacy HLS layouts
+   are outside its current scope. The command emits a candidate listing each
+   object's exact version, length and SHA-256 for operator review.
+   [Native manifest preparation](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/PREPARATION.md)
+3. Obtain approval for that video and its intended network. Install the reviewed
+   manifest and use the operator publisher to pin it on the dedicated node.
+   Enable public peering only for material approved for global distribution.
+   After publication, check the CID and playback from an independent peer.
+   To withdraw locally, remove the origin approval and reconcile the managed
+   pin with the publisher. Other peers can retain their copies.
+   [Publish and withdraw an approved video](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/publisher/README.md)
+
+Keep the journal in the encrypted recovery kit and retain the exact source
+versions in recoverable storage. [Reference-node recovery](./production.md#recovering-an-ipfs-reference-node)
 
 ## Backing up local media
 

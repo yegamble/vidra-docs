@@ -300,6 +300,22 @@ that reason, and `vidra doctor` checks the timer and the age of
 
 Run a restore drill quarterly.
 
+### Recovering an IPFS reference node
+
+If you run the optional dedicated URLStore node, include its approval manifests,
+publication journal, expected root CIDs, Kubo configuration and private peer
+identity in your encrypted recovery kit. Also preserve the service and origin
+configuration, scoped credentials, RPC token, and verified Kubo and publisher
+versions. Keep the decryption identity in independent operator custody.
+
+Preserve every S3 object version named in each active approval. A newer object
+at the same key cannot satisfy a reference to the previous version. During a
+drill, restore the operator materials on a replacement node with peering
+disabled. Confirm access to the exact source versions, rebuild each approved pin,
+and compare its root CID and file hashes. Seek and decode the recovered video
+before authorizing peering.
+[Dedicated reference-node recovery](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/runtime/README.md#withdraw-roll-back-and-recover)
+
 ## Disaster recovery, in the non-obvious order
 
 `restore.sh` **refuses to run while `deploy/Caddyfile.local` is missing** — the
