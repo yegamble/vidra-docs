@@ -102,16 +102,18 @@ The dry run reports the plan, the conflicts and the counts, and writes nothing.
 For the image families it sends **not one HTTP request** to the source.
 
 Its `entities` map covers `category_taxonomy`, `view_count`,
-`video_original_date`, `chapter`, `rating`, `rendition`, `actor_avatar`,
+`video_original_date`, `video_publication_date`, `chapter`, `rating`, `rendition`, `actor_avatar`,
 `actor_banner`, `thumbnail` and `storyboard` alongside users, channels, videos,
 comments, playlists and captions.
 
-Three counters mean less than they look like:
+Read the following counters in their source units.
 
 - **`view_count` counts videos**, never views — it is how many videos would have
   a total carried.
 - **`video_original_date` counts videos** carrying an `originallyPublishedAt`,
   and is 0 for a source too old to have that column at all.
+- **`video_publication_date` counts videos** carrying a source `publishedAt`.
+  This is the timestamp used for newest-first browsing when available.
 - **`category_taxonomy` is one setting**, so it is 0 or 1.
 
 Compare the rest against your

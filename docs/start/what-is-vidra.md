@@ -52,8 +52,9 @@ gate in the frontend repo.
 ## What Vidra is not
 
 - **Not a hosted service.** There is no vidra.com to sign up for. You run it.
-- **Not a PeerTube fork, and not API-compatible with PeerTube.** PeerTube
-  clients, embeds and plugins do not work against a Vidra instance.
+- **PeerTube migration.** Vidra implements its own API. It recognizes supported
+  PeerTube watch and embed URLs after import. See [Using your account after a
+  PeerTube migration](../migration/returning-users.md).
 - **Not a creator monetisation platform.** There is no payments system, no
   cryptocurrency integration and no revenue share.
 - **Not in-player peer-to-peer, yet.** Viewer-to-viewer distribution inside the
