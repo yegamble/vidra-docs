@@ -339,16 +339,16 @@ and [S3 copy response](https://www.backblaze.com/apidocs/s3-copy-object).
    original keys in an empty private primary, then verify the new versions.
    Prepare a candidate for the bucket the origin will read, retaining the video
    UUID, master key, paths, lengths and hashes. Regenerate each opaque origin ID
-   with its replacement version ID. Review that manifest for the individual
-   video and record the old-to-new version mapping in the recovery kit.
+   with its replacement version ID. Review and approve that manifest for the
+   individual video. Record the old-to-new version mapping in the recovery kit.
    [Native manifest preparer](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/PREPARATION.md)
 4. Rebuild only the approved pin with the saved publisher, Kubo version and
    UnixFS import settings. Identical paths, bytes and import settings reproduce
    the same directory CID even when the storage locators change. Compare the
    resulting CID with the saved one. After restart, cold-read every file through
    the replacement origin, verify its hash, seek and decode playback, and check
-   that the recursive pin inventory matches the approved roots. Resume peering
-   only after these checks pass and distribution is still authorized.
+   that the recursive pin inventory matches the approved roots. Obtain fresh
+   authorization for the intended network before bringing the restored node online.
    [IPFS content identifiers](https://docs.ipfs.tech/concepts/content-addressing/)
 
 ## Disaster recovery, in the non-obvious order
