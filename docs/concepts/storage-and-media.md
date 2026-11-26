@@ -95,11 +95,18 @@ node reachability, the gateway in use, whether a cluster is configured, and pin
 counts overall and per media class. It answers `503 ipfs_disabled` when both
 tiers are off.
 
+Operators can also opt into a dedicated reference node for individually
+approved videos. It serves IPFS blocks from immutable S3 object versions
+through a private origin. Cold reads depend on both services, while peers
+that already hold the blocks can continue serving them independently.
+[Versioned S3 reference pins](../install/storage-backends.md#versioned-s3-reference-pins)
+
 ## Delivery is gated by the API, not by the store
 
-Every media byte proxies through the Go API with a per-request database-backed
-authorisation check. That is what makes private videos private, and it is why
-you cannot simply point a public CDN at the bucket and call it done. The layered
+Vidra's normal playback and download routes proxy media through the Go API
+with a per-request database-backed authorisation check. That is what makes
+private videos private, and it is why you cannot simply point a public CDN at
+the bucket and call it done. The layered
 gates (`videoVisibleForMedia`, `videoForDownload`) are ordered so a failed check
 leaks nothing about whether the video exists.
 
