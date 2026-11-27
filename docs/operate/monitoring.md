@@ -51,6 +51,27 @@ runs on every orchestrator tick.
 Verifying you actually have admin is the same call: it must return 200, and a
 non-admin gets 403.
 
+### Check S3 reference pins
+
+From v0.7.35, open **Admin → System** on an instance with the optional
+reference reporter. **IPFS reference pinning** shows the last check and the
+number of approved video roots the reporter verified. **IPFS asset mirror**
+shows the status of the standard mirror. A deployment using S3 references
+alone can have healthy reference pins while its asset mirror is unconfigured.
+
+**Verified pins** shows zero after the reporter verifies an empty approval and
+pin inventory. **Unknown** means the API has no current verified count. If
+**Last checked** is more than five minutes old, check the reference host's
+`vidra-reference-status.timer` and its service journal. If the timestamp is
+more than 30 seconds ahead, check the clocks on the API and reference hosts. If the report is
+current and degraded, follow its diagnostic. A pin mismatch calls for checking
+approvals and the publisher journal. A media verification failure calls for
+checking the local gateway and the immutable S3 object version.
+
+The reporter checks the selected playlists and compares a sample of media
+bytes. To verify playback from the global network, fetch the approved CID
+from an independent peer. [Reference reporter installation and diagnostics](https://github.com/yegamble/vidra/blob/v0.7.35/deploy/ipfs-reference/runtime/README.md#reporting-reference-pin-health-in-vidra)
+
 ## Prometheus metrics
 
 `METRICS_ENABLED=true` exposes RED metrics at `/metrics`.

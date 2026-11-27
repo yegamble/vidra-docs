@@ -101,6 +101,11 @@ through a private origin. Cold reads depend on both services, while peers
 that already hold the blocks can continue serving them independently.
 [Versioned S3 reference pins](../install/storage-backends.md#versioned-s3-reference-pins)
 
+If you need the CID for a particular video, send its watch URL to the site
+operator and ask whether it has an approved public reference pin. The admin
+health screen reports an aggregate count. The operator can check the individual
+approval and test that CID from an independent peer. [Checking reference pins](../operate/monitoring.md#check-s3-reference-pins)
+
 ## Delivery is gated by the API, not by the store
 
 Vidra's normal playback and download routes proxy media through the Go API
