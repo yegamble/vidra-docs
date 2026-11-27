@@ -59,10 +59,11 @@ number of approved video roots the reporter verified. **IPFS asset mirror**
 shows the status of the standard mirror. A deployment using S3 references
 alone can have healthy reference pins while its asset mirror is unconfigured.
 
-**Pinned** can be zero after the reporter verifies an empty approval and pin
-inventory. **Unknown** means it could not establish a count. If **Last checked**
-is more than five minutes old, check the reference host's
-`vidra-reference-status.timer` and its service journal. If the report is
+**Verified pins** shows zero after the reporter verifies an empty approval and
+pin inventory. **Unknown** means the API has no current verified count. If
+**Last checked** is more than five minutes old, check the reference host's
+`vidra-reference-status.timer` and its service journal. If the timestamp is
+more than 30 seconds ahead, check the clocks on the API and reference hosts. If the report is
 current and degraded, follow its diagnostic. A pin mismatch calls for checking
 approvals and the publisher journal. A media verification failure calls for
 checking the local gateway and the immutable S3 object version.

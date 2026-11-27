@@ -144,7 +144,9 @@ optional `components.ipfs_reference` verdict. Read its `status`, the `error`
 diagnostic when present, and its `detail` fields. `probed_at` is the reporter's
 RFC 3339 observation time. `pinned` is a string containing the verified number
 of approved roots. An omitted count means unknown. An explicit `"0"` means
-the reporter verified zero. `components.ipfs` continues to describe the
+the reporter verified zero. The API drops stale counts and reports a degraded
+verdict when the observation is more than five minutes old or more than 30
+seconds ahead. `components.ipfs` continues to describe the
 standard asset mirror. [Interpreting reference pin health](../operate/monitoring.md#check-s3-reference-pins)
 
 ## Backup information and recovery
