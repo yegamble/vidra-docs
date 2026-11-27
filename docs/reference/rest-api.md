@@ -6,7 +6,7 @@ description: Where the OpenAPI contract lives and how to browse it.
 # REST API
 
 Use the OpenAPI document for the release your instance runs. Check the version
-at `GET /version`. [v0.7.31 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.31/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
+at `GET /version`. [v0.7.32 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.32/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
 
 There is no generated reference on this site yet. Publishing one from that spec
 is a tracked follow-up; until it exists, browse the spec itself rather than a
@@ -94,6 +94,16 @@ A successful password check for a Vidra account with MFA enabled returns
 `mfa_required` and a short-lived `mfa_token`. Complete the challenge at
 `POST /api/v1/auth/mfa/challenge` to obtain a session. An account imported
 with a PeerTube authenticator needs operator-assisted recovery first.
+
+## IPFS status and per-video reference pins
+
+Administrators can query `GET /api/v1/ipfs/status` for the configured Vidra
+mirrors. With both standard mirrors disabled, it returns `503 ipfs_disabled`.
+A dedicated S3 reference node has its own operator workflow. Check that node's
+recursive pins through its authenticated local Kubo RPC and reconcile the
+selected manifest with the reference publisher. Verify playback by fetching
+the directory CID from an independent peer after public peering is approved.
+[Versioned S3 reference pins](../install/storage-backends.md#versioned-s3-reference-pins)
 
 ## Backup information and recovery
 
