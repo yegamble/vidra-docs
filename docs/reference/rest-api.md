@@ -95,6 +95,26 @@ A successful password check for a Vidra account with MFA enabled returns
 `POST /api/v1/auth/mfa/challenge` to obtain a session. An account imported
 with a PeerTube authenticator needs operator-assisted recovery first.
 
+## Creator AT Protocol connection
+
+These Vidra endpoints require the creator's session. A linked account has a
+handle, a DID (decentralized identifier), a PDS URL and an auto-post setting.
+
+| Method and path | Result |
+|---|---|
+| `GET /api/v1/me/atproto` | Returns 200 with the connection, including `last_posted_at` when available. A creator with no link gets 404. |
+| `PUT /api/v1/me/atproto` | Creates or updates the link using `handle`, `app_password`, optional `pds_url`, and `auto_post`. A successful credential check returns 200 with the saved connection. |
+| `DELETE /api/v1/me/atproto` | Removes the caller's connection and returns 204. Repeating the request is safe. |
+
+Use a revocable app password. Vidra omits it from every response. Check the
+PDS address and app password on a 422. A 502 indicates an upstream connection
+failure. An authenticated 503 indicates the instance has disabled cross-posting.
+
+For a hosted PDS, use its own HTTPS origin for XRPC. For example,
+`GET /xrpc/com.atproto.server.describeServer` reports its service DID,
+`availableUserDomains` and `inviteCodeRequired`.
+[Connecting a creator account](../concepts/federation.md#connecting-a-creator-account)
+
 ## IPFS status and per-video reference pins
 
 Administrators can query `GET /api/v1/ipfs/status` for the configured Vidra

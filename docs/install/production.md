@@ -191,7 +191,7 @@ per run under the same UTC stamp:
 | File | Contents | Kept |
 |---|---|---|
 | `backups/vidra-<UTC>.dump.gz` | Custom-format `pg_dump`, verified with `pg_restore -l` before it is kept | 14 daily + 8 weekly |
-| `backups/vidra-config-<UTC>.tar.gz` | `env/production.env` + `deploy/Caddyfile.local`, repo-relative, mode 0600 | 14 daily + 8 weekly |
+| `backups/vidra-config-<UTC>.tar.gz` | The deployed env file, `deploy/Caddyfile.local` and, when present, `env/atproto-pds.env`, with repo-relative paths and mode 0600 | 14 daily + 8 weekly |
 
 plus a `backups/last_success` marker, whose format is a contract `vidra doctor`
 reads to judge backup age against a 26-hour window.
@@ -299,6 +299,32 @@ that reason, and `vidra doctor` checks the timer and the age of
 `backups/last_success`.
 
 Run a restore drill quarterly.
+
+### Backing up a hosted PDS
+
+The local Personal Data Server stores its account and repository databases
+under `data/atproto-pds/`. The default disk blob store is inside that
+directory. The Vidra database dump covers the Vidra application. A complete
+PDS recovery also needs its data and the matching `env/atproto-pds.env`,
+including the PLC rotation key. Preserve any custom PDS proxy configuration
+and TLS certificate and key used by the deployment.
+
+1. Stop the PDS with `./deploy/compose.sh stop pds` and copy its complete
+   data directory and matching configuration while writes are paused. Plan
+   to restart it even if the copy fails.
+2. Restart it with `./deploy/compose.sh start pds` and check
+   `/xrpc/_health` at the PDS origin.
+3. Encrypt the recovery copy and store it off-host. If the PDS uses an
+   external S3-compatible blob store, retain its blobs through the same
+   recovery point.
+4. Retrieve the saved version with the recovery credentials. On an isolated
+   host, verify its hashes, run SQLite integrity checks and compare the
+   repository identities and blob hashes. Preserve signing secrets from the
+   original installation.
+
+Include the PDS readback in backup monitoring. A successful upload of the
+Vidra database and configuration alone leaves the PDS data unverified.
+[PDS storage and recovery](https://github.com/yegamble/vidra/blob/v0.7.32/deploy/ATPROTO-PDS.md)
 
 ### Recovering media while B2 replication is pending
 
