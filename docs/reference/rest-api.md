@@ -6,7 +6,7 @@ description: Where the OpenAPI contract lives and how to browse it.
 # REST API
 
 Use the OpenAPI document for the release your instance runs. Check the version
-at `GET /version`. [v0.7.34 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.34/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
+at `GET /version`. [v0.7.35 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.35/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
 
 There is no generated reference on this site yet. Publishing one from that spec
 is a tracked follow-up; until it exists, browse the spec itself rather than a
@@ -137,9 +137,15 @@ Administrators can query `GET /api/v1/ipfs/status` for the configured Vidra
 mirrors. With both standard mirrors disabled, it returns `503 ipfs_disabled`.
 A dedicated S3 reference node has its own operator workflow. Check that node's
 recursive pins through its authenticated local Kubo RPC and reconcile the
-selected manifest with the reference publisher. Verify playback by fetching
-the directory CID from an independent peer after public peering is approved.
-[Versioned S3 reference pins](../install/storage-backends.md#versioned-s3-reference-pins)
+selected manifest with the reference publisher.
+
+From v0.7.35, administrators can read `GET /api/v1/admin/system` for the
+optional `components.ipfs_reference` verdict. Read its `status`, the `error`
+diagnostic when present, and its `detail` fields. `probed_at` is the reporter's
+RFC 3339 observation time. `pinned` is a string containing the verified number
+of approved roots. An omitted count means unknown. An explicit `"0"` means
+the reporter verified zero. `components.ipfs` continues to describe the
+standard asset mirror. [Interpreting reference pin health](../operate/monitoring.md#check-s3-reference-pins)
 
 ## Backup information and recovery
 

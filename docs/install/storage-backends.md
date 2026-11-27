@@ -136,6 +136,15 @@ Kubo RPC and local gateway on loopback.
 Keep the journal in the encrypted recovery kit and retain the exact source
 versions in recoverable storage. [Reference-node recovery](./production.md#recovering-an-ipfs-reference-node)
 
+On v0.7.35 or later, a host administrator can enable the reference reporter
+to show verified pin counts in **Admin → System**. Install its service
+and timer on the node with access to the approval manifests, publisher receipts
+and local Kubo gateway. Set `IPFS_REFERENCE_STATUS_DIR` on the API host to the
+dedicated directory where the reporter delivers its status file. Vidra mounts
+this directory read-only. A separate reporter host needs an authenticated
+transfer that preserves the observation time. Continue to approve each new
+pin through the publisher. [Reporting reference pin health](https://github.com/yegamble/vidra/blob/v0.7.35/deploy/ipfs-reference/runtime/README.md#reporting-reference-pin-health-in-vidra)
+
 ## Backing up local media
 
 The volumes, as Docker names them (the compose project is `vidra`):
