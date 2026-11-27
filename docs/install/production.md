@@ -300,6 +300,42 @@ that reason, and `vidra doctor` checks the timer and the age of
 
 Run a restore drill quarterly.
 
+### Recovering media while B2 replication is pending
+
+An operator can supplement delayed replicas with verified copies in a private
+recovery account. This procedure covers a recorded point in time. Continue
+monitoring native B2 replication and report its backlog separately.
+
+1. **Freeze the inventory.** Record a UTC cutoff. For every source upload
+   through that cutoff, retain its bucket, object name, immutable file ID,
+   upload time and byte length. Include superseded versions and hide actions.
+   Compare the inventory with the recovery bucket and select the missing
+   upload versions. [B2 replication behavior](https://www.backblaze.com/docs/cloud-storage-cloud-replication)
+2. **Copy only the selected versions.** Read each source by immutable ID
+   with read-only credentials. Stream the bytes and compute SHA-256. Write
+   into a fresh private prefix using a short-lived, prefix-scoped, write-only
+   key. Keep deletion and governance-bypass privileges off that key. Use the
+   recovery bucket's server-side encryption and governance retention policy.
+   [B2 application key restrictions](https://www.backblaze.com/docs/cloud-storage-application-keys)
+3. **Verify with separate recovery credentials.** Using a read-only client,
+   fetch each supplemental copy by its destination file ID. Require its byte
+   length and independently computed SHA-256 to match the source. Check its
+   encryption mode and retention expiry. Reconcile any interrupted upload by
+   destination version before retrying. Revoke the writer when finished.
+   [B2 Object Lock](https://www.backblaze.com/docs/cloud-storage-object-lock)
+4. **Prove the restore.** Map every upload version in the frozen inventory to
+   an immutable destination ID and mark its route as native replication or a
+   supplemental copy. Encrypt the map, original visibility history and
+   verification receipts. Keep an off-site copy and a separately held decryption
+   key. Restore a sample by mapped ID and decode it. Restore current names
+   according to their last source action
+   at the cutoff. Keep hidden names hidden and superseded versions historical.
+   Restore the matching Vidra database to preserve application privacy settings.
+
+Record an explicit operator decision before accepting this combined coverage.
+Include the cutoff, counts and bytes for each route, any missing versions,
+checksum limitations and the restore outcome.
+
 ### Recovering an IPFS reference node
 
 If you run the optional dedicated URLStore node, include its approval manifests,
