@@ -21,6 +21,10 @@ For an imported public video, try your original watch link, including `/w/…` a
 
 The watch page and newest-first lists use the video's publication time on the source site when available. They fall back to its creation time when the publication time is missing. A video uploaded in August and published in November appears with the November videos. A separate original publication date can record when it first appeared elsewhere.
 
+If a saved watch link says the video lookup is temporarily unavailable, keep
+the link and try again later. Sites running v0.7.36 or later display this
+message when the service is busy or cannot finish the lookup.
+
 | If you are looking for… | Where to look |
 |---|---|
 | An unlisted video | Use its watch link. Public listings and search omit it. |

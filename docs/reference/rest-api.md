@@ -6,7 +6,7 @@ description: Where the OpenAPI contract lives and how to browse it.
 # REST API
 
 Use the OpenAPI document for the release your instance runs. Check the version
-at `GET /version`. [v0.7.35 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.35/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
+at `GET /version`. [v0.7.36 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.36/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
 
 There is no generated reference on this site yet. Publishing one from that spec
 is a tracked follow-up; until it exists, browse the spec itself rather than a
@@ -75,6 +75,13 @@ browser URL. This read uses the same access checks as `GET /api/v1/videos/{id}`.
 | 400 | Both identifiers were supplied, or neither was supplied. |
 | 401 | Read the error code. `sign_in_required` identifies a members-only video and `password_required` identifies a video that requires a video password. |
 | 404 | The identifier is malformed or unknown, or the video is unavailable to this caller. |
+| 429 | The request exceeded its rate limit. Wait for the delay in `Retry-After` when present. |
+| 503 | From v0.7.36, `database_unavailable` indicates an unavailable database and `request_timeout` indicates an expired request deadline. Retry later. |
+
+The 503 response also applies to `GET /api/v1/videos/{id}`. A client that
+stores video availability should leave it unchanged after a 429 or 503.
+PeerTube watch and embed links can return these temporary statuses directly.
+[Monitoring migrated watch links](../operate/monitoring.md#monitor-migrated-watch-links)
 
 For display, use `published_at` when present, with `created_at` as the fallback.
 The optional `originally_published_at` records first publication elsewhere.
