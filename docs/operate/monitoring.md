@@ -72,6 +72,26 @@ The reporter checks the selected playlists and compares a sample of media
 bytes. To verify playback from the global network, fetch the approved CID
 from an independent peer. [Reference reporter installation and diagnostics](https://github.com/yegamble/vidra/blob/v0.7.35/deploy/ipfs-reference/runtime/README.md#reporting-reference-pin-health-in-vidra)
 
+### Monitor migrated watch links
+
+From v0.7.36, a visible PeerTube video at `/w/{shortUUID}` still redirects to
+its Vidra watch page with HTTP 302. An unknown or unavailable item can return
+404. If the resolver is rate-limited, the legacy route returns 429. A timeout,
+unreachable backend or upstream server error produces 503. The same temporary
+responses apply to `/videos/watch/{id}` and `/videos/embed/{id}`.
+
+These temporary responses include `Cache-Control: no-store` and carry a
+numeric `Retry-After` when the upstream sent one. The frontend allows five
+seconds for the anonymous video lookup. If 429s recur under normal use, check
+the trusted reverse-proxy configuration so the origin can apply each
+viewer's rate limit.
+
+To investigate a spike, compare redirect and error counts for browser watch
+links with resolver responses over the same time window. Compare playable
+media requests and first-frame measurements separately. A visitor who receives
+an error before the player mounts cannot send a first-frame measurement.
+[Video resolver responses](../reference/rest-api.md#migrated-video-identifiers-and-dates)
+
 ## Prometheus metrics
 
 `METRICS_ENABLED=true` exposes RED metrics at `/metrics`.
