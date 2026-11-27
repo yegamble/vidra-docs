@@ -117,14 +117,14 @@ Kubo RPC and local gateway on loopback.
    and playback after restart. Take the origin offline briefly and check that a
    cold read fails, then restore it and verify the bytes again.
    [Dedicated node setup and checks](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/runtime/README.md)
-2. For catalogue videos, preparation requires a core release supplying the
-   `ipfs_public_reference_videos` eligibility view, a post-v0.7.31 addition.
-   On a v0.7.31 installation, use the deployment tools for the synthetic
-   rehearsal. The native preparer accepts one eligible, versioned
-   Vidra HLS generation. Historical PeerTube imports with legacy HLS layouts
-   are outside its current scope. The command emits a candidate listing each
-   object's exact version, length and SHA-256 for operator review.
-   [Native manifest preparation](https://github.com/yegamble/vidra/blob/main/deploy/ipfs-reference/PREPARATION.md)
+2. Vidra Core v0.7.32 adds the `ipfs_public_reference_videos` eligibility view
+   in migration 194. Give the preparation role `SELECT` on that view and give
+   its S3 reader access to the selected native HLS generation. Run the preparer
+   for one Vidra video UUID and review every object's version, length and SHA-256.
+   If the view has no row for that UUID, the preparer refuses the request.
+   Legacy PeerTube HLS layouts are excluded. On v0.7.31, the dedicated
+   deployment tools support the synthetic rehearsal.
+   [v0.7.32 manifest preparation](https://github.com/yegamble/vidra/blob/v0.7.32/deploy/ipfs-reference/PREPARATION.md)
 3. Obtain approval for that video and its intended network. Install the reviewed
    manifest and use the operator publisher to pin it on the dedicated node.
    Enable public peering only for material approved for global distribution.
