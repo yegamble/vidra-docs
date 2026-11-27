@@ -16,6 +16,18 @@ description: Reports, registration policy, and the runtime settings registry beh
 | **Blocks** | Account-level and instance-level blocks. These are yours — they are not synchronised with federated peers. |
 | **Audit envelope** | Job and admin actions carry an audited envelope with an allow-list of fields and a `sensitiveKeys` denylist, guarded by a static test. |
 
+## Find an account
+
+In v0.7.34 or later, open **Admin → Users**. Enter part of a username or email
+address and choose **Search**. Select **Staff** to show administrators and moderators, or
+**Deactivated** to show accounts that have been switched off and can be
+reactivated. The number on each button counts every account matching the
+search in that group. An inactive moderator can appear in both groups.
+**All** also includes records of permanently deleted accounts.
+
+Changing the group or search takes you to its first page. Use **Next** to
+continue through the same results. You can bookmark the filtered list.
+
 ## Registration policy is a policy, not a security control
 
 Closed registration is still the right default for a private launch, but it is

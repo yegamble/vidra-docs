@@ -28,6 +28,19 @@ The watch page and newest-first lists use the video's publication time on the so
 | Your private video or draft | Sign in as its owner and open Studio. Anonymous viewers cannot play it. PeerTube videos that required a shared password import as private. |
 | A video that still appears missing | Send the old watch URL and channel name to the operator through the site's contact route. The operator can check the import and moderation status. |
 
+## Play a video on your phone
+
+On sites running the v0.7.34 web player or later, tap the video to show the
+controls. Tap the speaker to silence the video. Its screen reader label changes
+from **Mute** to **Unmute**. Tap it again to restore the sound. Open **Settings**
+(the cog). When the video offers quality options, choose **Playback quality**
+to see them.
+
+Below the video, tap the channel name to open the channel. Its follower count
+appears beneath the name once it loads. **Follow** uses your account on this
+site. If you're signed out and see **Interact from your instance**, you can
+use an account on another server to interact with the video.
+
 ## Recover missing data
 
 For missing uploads or account data after a site restore, contact the operator and include the affected URL and approximate date. Site-wide restores use the operator's database, configuration and media backups. For example, a database dump can identify a video even when its media file still needs to be recovered separately.
