@@ -6,7 +6,7 @@ description: Where the OpenAPI contract lives and how to browse it.
 # REST API
 
 Use the OpenAPI document for the release your instance runs. Check the version
-at `GET /version`. [v0.7.32 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.32/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
+at `GET /version`. [v0.7.34 API contract](https://github.com/yegamble/vidra-core/blob/v0.7.34/api/openapi.yaml) · [Development contract](https://github.com/yegamble/vidra-core/blob/main/api/openapi.yaml)
 
 There is no generated reference on this site yet. Publishing one from that spec
 is a tracked follow-up; until it exists, browse the spec itself rather than a
@@ -81,6 +81,22 @@ The optional `originally_published_at` records first publication elsewhere.
 For a channel listing, `GET /api/v1/channels/{handle}/videos?sort=-published_at`
 requests newest first. Vidra has its own client contract and recognizes
 selected PeerTube browser and embed URLs. [Guide for returning viewers](../migration/returning-users.md)
+
+## Filter the account directory
+
+In core v0.7.34 or later, administrators and moderators can request
+`GET /api/v1/admin/users?q=alex&filter=staff&limit=10&offset=0`.
+The optional `q` matches a username or email substring. The `filter` parameter
+accepts `all` (the default), `staff` or `deactivated`. An unknown filter
+returns 400.
+
+The response includes `users`, `total`, `limit`, `offset` and `counts`.
+Use `total` to paginate the selected group. Use `counts.all`, `counts.staff`
+and `counts.deactivated` for the full search, regardless of the current page
+or selected group. Staff includes administrators and moderators. Deactivated
+includes inactive accounts that can still be reactivated. Permanently deleted
+records remain in All. Results are ordered newest first with the account ID
+breaking ties.
 
 ## Account recovery and operator contact
 
