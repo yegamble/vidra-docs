@@ -28,6 +28,18 @@ search in that group. An inactive moderator can appear in both groups.
 Changing the group or search takes you to its first page. Use **Next** to
 continue through the same results. You can bookmark the filtered list.
 
+## Advertising on staff pages
+
+From v0.7.35, Vidra's player skips video ad breaks in Admin and Moderation.
+On a site that loads custom JavaScript, entering or leaving a staff area
+loads a fresh document. This clears third-party listeners created on the
+previous page. Site styling and permitted customization still load.
+
+If your site installs display ads through its own JavaScript, check the
+current path before starting the vendor loader, timers or observers. Exclude
+`/admin`, `/moderation`, any `/mod` alias, and their child paths. This also
+covers a staff member who opens a bookmarked queue directly.
+
 ## Registration policy is a policy, not a security control
 
 Closed registration is still the right default for a private launch, but it is
