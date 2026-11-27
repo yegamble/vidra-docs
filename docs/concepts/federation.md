@@ -88,14 +88,28 @@ for posting there. The linked app password is envelope-encrypted at rest under
 `ATPROTO_KEY_KEK`. With the switch off, the link, status and unlink endpoints
 answer 503 and no auto-post worker runs.
 
+### Connecting a creator account
+
+Your AT Protocol account lives on a Personal Data Server (PDS). An instance
+that hosts its own invite-only PDS can give you its address and an invitation.
+An existing account keeps its current PDS and handle.
+
+1. Sign in to your AT Protocol account and create an app password for Vidra.
+2. In Vidra, open **Settings → Connections → Bluesky**. Enter your handle
+   and the app password. Select the PDS that hosts the account.
+3. Choose whether Vidra may automatically post your eligible public videos.
+   Save the connection and check the handle in the connected-account view.
+
+The channel's AT Protocol setting also applies. You can disconnect in
+**Settings → Connections** and revoke the app password at the account's PDS.
+Your Vidra sign-in is configured separately.
+
 ## Turn federation on after install
 
-The `vidra setup` interview does not ask about federation, so every instance
-starts with all three switches off. They are **boot-time environment keys**: the
-api reads them once, mounts the federation routes and starts the delivery
-workers only if they are on, and the admin console shows them read-only on
-`/admin/infrastructure`. There is no toggle to flip there. Turning one on is an
-edit to `env/production.env` and a deploy.
+These features default to off. The API reads the environment when it starts,
+and the admin console displays the effective settings on
+`/admin/infrastructure`. Apply saved setup or environment changes with a
+deployment.
 
 | You want | Set | It also needs |
 |---|---|---|
@@ -187,7 +201,19 @@ and never paste a fresh one over it "to tidy up".
 
 ### ATProto
 
-These keys are not in the production template, so add the lines yourself.
+The production template groups the settings under ATProto distribution.
+The setup option `--atproto` enables creator cross-posting. With
+`--atproto-pds local`, Vidra runs an invite-only PDS at
+`pds.<your-site-host>`. An external provider can be selected with
+`--atproto-pds https://pds.example.org`. Point the hosted name at the
+deployment and verify HTTPS before inviting creators. Its public
+`/xrpc/com.atproto.server.describeServer` response gives the service DID,
+allowed handle suffixes and invitation policy.
+
+For a custom handle, publish its DID in the account's `_atproto` TXT
+record and verify it through an independent identity resolver. Keep the
+hosted repositories, blobs and signing secrets together in recovery.
+[Hosted PDS setup](https://github.com/yegamble/vidra/blob/v0.7.32/deploy/ATPROTO-PDS.md) · [Backing up a hosted PDS](../install/production.md#backing-up-a-hosted-pds)
 
 For **sign in with Bluesky**, add one line and deploy. Nothing is sealed, so
 there is no KEK:
