@@ -13,11 +13,12 @@ encode does, and the video becomes playable when the encode lands.
 
 ```mermaid
 flowchart TD
-    A["Upload<br/>direct · chunked/resumable · async URL import"] --> B["Validate<br/>quota, ffprobe, SSRF guard on URL imports"]
-    B --> C{"ClamAV<br/>enabled?"}
-    C -->|yes| D["Malware scan"]
-    C -->|no| E
-    D --> E["Durable Postgres transcode queue"]
+    A["Upload<br/>direct · chunked/resumable · async URL import"] --> B["Validate size, type and quota<br/>SSRF guard on URL imports"]
+    B --> C["Assemble and store the original"]
+    C --> D{"Production safety scan"}
+    D -->|clean| P["Probe media and prepare artwork"]
+    D -->|rejected| R["Stop publication"]
+    P --> E["Durable Postgres transcode queue"]
     E --> F["Encode + package<br/>H.264/AAC ladder, CMAF/fMP4"]
     F --> G["Trick-play I-frame rendition<br/>thumbnails · storyboards · chapters"]
     G --> H["Store<br/>local or S3-compatible"]
@@ -51,9 +52,20 @@ The cooldown setting cannot turn the throttle off. That is
 (`channel_sync_interval_minutes`, 5 to 10080 minutes) is editable in the same
 section.
 
-ClamAV scanning is optional — the `scan` profile plus
-`MALWARE_SCAN_ENABLED=true`. Budget an extra 2 GB of RAM for it; `clamd` loads
-the whole signature database into memory.
+### When an upload reaches 100%
+
+Studio transfers the file in resumable chunks. At 100%, the server still has to assemble the original, scan it and inspect its media streams. Encoding the playback renditions is a separate job. You can check the video in Studio while processing continues. After an interrupted transfer, select the same file to resume the open session. Sessions expire after 24 hours.
+
+If processing ends in **Failed**, give the operator the video ID, the approximate time and the error shown in Studio. Keep private files and sign-in details out of the report.
+
+Operators can open the job details in the admin panel and use the correlation ID to find the matching worker log.
+
+| Failed job | What to check |
+|---|---|
+| `upload_finalize` | Check original assembly, the scanner verdict and the probe. A scanner connection, size-limit or timeout error leaves the original without a clean verdict. Restore scanning and run normal ingestion before making the video available. |
+| `video_transcode` | Check the encoder diagnostic and which renditions reached ready. After correcting the encoder, staff can regenerate HLS for an existing, successfully ingested original. Verify that a viewer can play the new rendition. |
+
+The production template uses `CLAMAV_ADDR` and the `scan` Compose profile. `MALWARE_SCAN_MODE=fail-closed` stops publication when the scan cannot complete. Budget memory for the signature database and scratch space for the largest concurrent uploads. Align the API's effective `upload_max_size_bytes`, creator quotas, clamd's `StreamMaxLength` and `MaxFileSize`, and the end-to-end `CLAMAV_TIMEOUT`. Test a clean file at the advertised boundary and check that the scanner detects a harmless test signature there before increasing the limit. [ClamAV scanner configuration](https://docs.clamav.net/manual/Usage/Configuration.html)
 
 ### Encode and package
 

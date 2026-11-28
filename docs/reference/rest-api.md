@@ -138,6 +138,14 @@ For a hosted PDS, use its own HTTPS origin for XRPC. For example,
 `availableUserDomains` and `inviteCodeRequired`.
 [Connecting a creator account](../concepts/federation.md#connecting-a-creator-account)
 
+## Resumable video uploads
+
+1. For an owned draft, `POST /api/v1/videos/{id}/upload-session` with the file's `filename` and exact byte `size`. Use the `chunk_size`, `total_chunks`, `upload_id` and expiry returned by the server. A file above the per-video cap receives `413`. A total or daily quota refusal receives `422`.
+2. Send each file slice as `application/octet-stream` to `PUT /api/v1/uploads/{upload_id}/chunks/{n}`, starting at index zero. After an interruption, read `GET /api/v1/uploads/{upload_id}` and send the missing indices. Each chunk except the last must have the advertised size.
+3. `POST /api/v1/uploads/{upload_id}/complete` queues finalization and returns `202`. Poll the session through `queued` and `processing`. On `failed`, show `failure_reason`. On `completed`, fetch `GET /api/v1/videos/{id}` for the video's own state and playback availability.
+
+Use the same authenticated account throughout. A retry after token renewal can resend the same chunk index with the same bytes. [How uploads become playable](../concepts/video-pipeline.md#when-an-upload-reaches-100)
+
 ## IPFS status and per-video reference pins
 
 Administrators can query `GET /api/v1/ipfs/status` for the configured Vidra
