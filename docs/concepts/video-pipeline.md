@@ -73,7 +73,11 @@ On an instance that enables private processing, Studio accepts resumable files u
 
 For inputs above 2,147,483,645 bytes, the server assembles the raw bytes in private staging. An isolated encoder selects the first video stream and first audio stream present, removes source metadata and attachments, and builds an MP4. The server scans the whole MP4 before making it available for playback or download. The download contains this reconstructed media. A long video may use a lower bitrate or resolution so the complete download fits the scanner’s limit. For an audio-only upload, the MP4 contains an audio track.
 
-The progress bar reaches 100% when the transfer finishes. Server processing may continue for a long video. Studio refreshes the upload status while that work runs. Leave the existing draft in place to follow its progress. Visibility and publication choices still apply after processing. [Resumable video uploads](../reference/rest-api.md#resumable-video-uploads)
+Studio starts transferring your file as soon as you select it. It creates a private draft while you enter the details. To keep the finished video private, choose **Private** when saving its visibility.
+
+If your connection drops or you reload the page, return to **Studio → Dashboard**. Under **Unfinished uploads**, choose **Resume** for that file and select the same file again. Studio checks its identity and sends the missing chunks. **Discard** removes the unfinished session. If the server asks Studio to slow down, the browser waits and retries automatically within its retry limit. If it stops, resume the existing session while it is still available.
+
+At 100%, the transfer has finished. The server may still be processing the video. Leave the existing draft in place and check its status in Studio. [Resumable video uploads](../reference/rest-api.md#resumable-video-uploads)
 
 ### Encode and package
 
