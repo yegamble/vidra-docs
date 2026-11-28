@@ -148,6 +148,34 @@ The audit envelope uses an allow-list plus a `sensitiveKeys` denylist, with a
 static guard test — so a new field cannot quietly start being logged. A
 correlation-id chain runs end to end.
 
+### Retry an upload after a scanner error
+
+From v0.7.37, an operator can retry a failed upload whose original is still in storage and whose upload session has time remaining. Start with the video ID and correlation ID from the failed `upload_finalize` job. Check the scanner is healthy. A job can remain in the history after its creator deletes the video. Leave deleted videos alone.
+
+In `psql` on the application database, look up the current candidate for that video.
+
+```sql
+\prompt 'Video UUID ' video_id
+SELECT upload_id, owner_id, privacy, sha256, size_bytes, expires_at
+FROM retained_scan_sources
+WHERE video_id = :'video_id'::uuid
+  AND session_state = 'failed'
+  AND expires_at > now();
+```
+
+Continue only when the row matches the original, owner and visibility you intend to recover. An empty result means there is no eligible upload for this video. Infection, moderation, newer uploads and previously generated renditions can all affect eligibility.
+
+Set `UPLOAD_ID`, `OWNER_ID`, `PRIVACY` and `SHA256` from the verified row. From the deployment directory, run the preview.
+
+```bash
+./deploy/compose.sh exec -T api /app/api recover-scan-upload \
+  --upload "$UPLOAD_ID" --owner "$OWNER_ID" --privacy "$PRIVACY" --sha256 "$SHA256"
+```
+
+The preview checks that the retained object exists and its size matches. It reports `eligible, … bytes, dry run` when it passes. A successful retry can publish a video with public visibility under its existing publication settings. To queue the rescan, repeat the same command with `--apply`.
+
+The worker verifies the original bytes against the recorded checksum and runs normal ingestion with fail-closed scanning. Watch the new finalize job in the admin panel, then check playback under the video's current visibility. Repeating an accepted request reports the existing recovery job's state. The first failed job remains in the history.
+
 ## What to watch after a deploy
 
 ```bash

@@ -58,7 +58,7 @@ Studio transfers the file in resumable chunks. At 100%, the server still has to 
 
 If processing ends in **Failed**, give the operator the video ID, the approximate time and the error shown in Studio. Keep private files and sign-in details out of the report.
 
-Operators can open the job details in the admin panel and use the correlation ID to find the matching worker log.
+Operators can open the job details in the admin panel and use the correlation ID to find the matching worker log. If a scanner error left an original in storage, the operator can check whether it still qualifies for a rescan. [Retry an upload after a scanner error](../operate/monitoring.md#retry-an-upload-after-a-scanner-error)
 
 | Failed job | What to check |
 |---|---|
