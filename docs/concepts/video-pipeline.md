@@ -67,6 +67,14 @@ Operators can open the job details in the admin panel and use the correlation ID
 
 The production template uses `CLAMAV_ADDR` and the `scan` Compose profile. `MALWARE_SCAN_MODE=fail-closed` stops publication when the scan cannot complete. Budget memory for the signature database and scratch space for the largest concurrent uploads. Align the API's effective `upload_max_size_bytes`, creator quotas, clamd's `StreamMaxLength` and `MaxFileSize`, and the end-to-end `CLAMAV_TIMEOUT`. Test a clean file at the advertised boundary and check that the scanner detects a harmless test signature there before increasing the limit. [ClamAV scanner configuration](https://docs.clamav.net/manual/Usage/Configuration.html)
 
+### Uploading a large source file
+
+On an instance that enables private processing, Studio accepts resumable files up to the operator’s limit, with a maximum of **20 GiB** (21,474,836,480 bytes). Your storage and daily upload quotas still apply. Keep your own original if you need an archival copy.
+
+For inputs above 2,147,483,645 bytes, the server assembles the raw bytes in private staging. An isolated encoder selects the first video stream and first audio stream present, removes source metadata and attachments, and builds an MP4. The server scans the whole MP4 before making it available for playback or download. The download contains this reconstructed media. A long video may use a lower bitrate or resolution so the complete download fits the scanner’s limit. For an audio-only upload, the MP4 contains an audio track.
+
+The progress bar reaches 100% when the transfer finishes. Server processing may continue for a long video. Studio refreshes the upload status while that work runs. Leave the existing draft in place to follow its progress. Visibility and publication choices still apply after processing. [Resumable video uploads](../reference/rest-api.md#resumable-video-uploads)
+
 ### Encode and package
 
 Encoding and packaging are one ffmpeg invocation, not two passes: the muxer is an

@@ -183,6 +183,19 @@ or through an SSH tunnel — never on anything the internet can reach. Federatio
 and OAuth are https-only by design and will not work there.
 :::
 
+## Operating the local large-upload processor
+
+A release that includes `normalize-upload` in its core image can use the optional host processor for Studio resumable uploads. The decoder runs in a separate container with a read-only root, no network, a read-only input and one writable output file. Vidra keeps the processed download and playback in the configured media store. Private input chunks are removed after successful finalization. Account for the temporary input when sizing storage and setting lifecycle policies.
+
+1. On each host that finalizes uploads, install `deploy/upload-normalizer.py` as `/usr/local/lib/vidra/upload-normalizer.py`. Install `deploy/vidra-upload-normalizer.socket` and `deploy/vidra-upload-normalizer@.service` under `/etc/systemd/system/`, owned by root. Use the files from the same release bundle as the API.
+2. Put the qualified, locally pulled `ghcr.io/yegamble/vidra-core@sha256:…` reference in `/etc/vidra-upload-normalizer/core-image`. Use the digest in the release record for the host architecture. Confirm the binary and its FFmpeg dependencies are present before activating the socket. Update the pinned digest when changing core releases.
+3. Run `systemctl daemon-reload` and `systemctl enable --now vidra-upload-normalizer.socket`. Verify `/run/vidra-upload-normalizer/processor.sock` is owned by UID 10001 with mode `0600`. The app uses this socket. The Docker API stays on the operator host.
+4. Configure `UPLOAD_NORMALIZER_DIR=/run/vidra-upload-normalizer`, whole-file ClamAV scanning in fail-closed mode, and `UPLOAD_MAX_SIZE=21474836480` for a 20 GiB intake cap. Check any runtime `upload_max_size_bytes` override and creator quotas. Deploy through `deploy/deploy.sh`. Direct uploads, replacement files and URL imports on this configuration retain the 2,147,483,645-byte whole-file ceiling.
+5. Allow room under `/var/lib/vidra-upload-normalizer` for one complete input, one processed output and a 20 GiB reserve. The broker processes one file per host at a time. Also monitor worker scratch, scanner health, finalizer age and transcode queue depth. After an interruption, the broker cleans up its previous job before starting the next.
+6. Before opening intake, use a private synthetic video. Check Studio upload, the processed download, authenticated playback, anonymous denial for private media, cleanup and recovery from the private backup. Preserve the service units, image digest, configuration and release record with the operator recovery kit.
+
+To pause large intake, first lower the runtime upload cap to 2,147,483,645 bytes or less. Let queued work finish with the processor available before removing the socket or rolling back. [Creator experience and file handling](../concepts/video-pipeline.md#uploading-a-large-source-file)
+
 ## Backups
 
 `./deploy/backup.sh`, and the systemd timer that runs it, writes **two** files
