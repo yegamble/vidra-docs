@@ -72,6 +72,15 @@ The reporter checks the selected playlists and compares a sample of media
 bytes. To verify playback from the global network, fetch the approved CID
 from an independent peer. [Reference reporter installation and diagnostics](https://github.com/yegamble/vidra/blob/v0.7.35/deploy/ipfs-reference/runtime/README.md#reporting-reference-pin-health-in-vidra)
 
+#### A video was made private while pinned
+
+A fresh `pin_set_mismatch` can occur even when Kubo has exactly the roots in the publisher journal. The native origin also checks the video's current visibility and transcode generation. A formerly public video can return 404 at the origin while its old pin remains on the node. The scheduled reporter flags this condition. An operator must reconcile the pin.
+
+1. In **Admin → System**, refresh the details and check the observation time. Confirm the video and generation against the live catalogue. If the eligibility service is unavailable, restore it before making a withdrawal decision.
+2. For a confirmed withdrawal, keep the video private and switch the dedicated reference node offline. Move its manifest outside the active approval directory, then run the publisher with `-reconcile`, the original manifest path and the journal and RPC settings for that publication. It releases the managed pin. Peers that already received the content can retain their copies. [Publisher withdrawal procedure](https://github.com/yegamble/vidra/blob/v0.7.36/deploy/ipfs-reference/publisher/README.md#withdraw-and-recover)
+3. Before resuming peering, verify the remaining pins and local block inventory against the surviving approvals. Unpinning can leave blocks in the repository. If unexpected blocks remain, keep the node offline and rebuild from the surviving approvals in an empty repository. After the inventory passes, resume peering, check the next scheduled health observation and retrieve a remaining approved clip from a fresh peer. [Reference node admission and recovery](https://github.com/yegamble/vidra/blob/05962092f268d3ab9cbdc7cb165ff8855e678629/deploy/ipfs-reference/runtime/README.md#verify-and-switch-a-synthetic-node-to-public-peering)
+4. Record the withdrawal alongside the recovery kit. During a restore, start offline and exclude the withdrawn approval from the active directory. An older kit can contain both the original manifest and a journal that still lists its pin.
+
 ### Monitor migrated watch links
 
 From v0.7.36, a visible PeerTube video at `/w/{shortUUID}` still redirects to
