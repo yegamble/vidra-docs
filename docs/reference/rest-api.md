@@ -146,6 +146,8 @@ For a hosted PDS, use its own HTTPS origin for XRPC. For example,
 
 Use the same authenticated account throughout. A retry after token renewal can resend the same chunk index with the same bytes. [How uploads become playable](../concepts/video-pipeline.md#when-an-upload-reaches-100)
 
+Instances with the local large-upload processor accept at most 21,474,836,480 declared bytes through the ordinary resumable session. Above 2,147,483,645 bytes, the retained playback and download source is the scanned, reconstructed MP4. Size checks and daily quotas use the declared or transferred source size. The processing policy and staging filename are server-managed. A client uses the same chunk and status endpoints throughout. [Large source processing](../concepts/video-pipeline.md#uploading-a-large-source-file)
+
 ## IPFS status and per-video reference pins
 
 Administrators can query `GET /api/v1/ipfs/status` for the configured Vidra
