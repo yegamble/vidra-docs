@@ -101,6 +101,13 @@ through a private origin. Cold reads depend on both services, while peers
 that already hold the blocks can continue serving them independently.
 [Versioned S3 reference pins](../install/storage-backends.md#versioned-s3-reference-pins)
 
+On an instance with the reference playback bridge enabled, an approved public
+video offers **Use IPFS** on its watch page. Select it to play the approved
+rendition. If that source stalls or becomes unavailable, the player falls back
+to the instance’s ordinary HLS stream. A new transcode generation needs its own
+approval. Withdrawing a video removes the instance’s playback option. Peers that
+already downloaded a public CID may keep their copies.
+
 If you need the CID for a particular video, send its watch URL to the site
 operator and ask whether it has an approved public reference pin. The admin
 health screen reports an aggregate count. The operator can check the individual

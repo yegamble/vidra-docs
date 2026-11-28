@@ -148,6 +148,16 @@ Use the same authenticated account throughout. A retry after token renewal can r
 
 ## IPFS status and per-video reference pins
 
+On instances with reference playback enabled, `POST /api/v1/videos/{id}/playback-session`
+can return `ipfs_hls_url` for a public video whose current generation has an
+approved, available pin. Use the returned URL exactly as supplied. For a native
+reference pin it points to the instance’s video-specific HLS route. Use
+`authoritative_hls_url` for ordinary playback or when the optional source fails.
+An omitted `ipfs_hls_url` means the client should show the normal player without
+an IPFS choice. The media route checks availability and eligibility again on
+requests for playlists and segments. A withdrawn or replaced generation can
+therefore return `404` after an earlier session offered it.
+
 Administrators can query `GET /api/v1/ipfs/status` for the configured Vidra
 mirrors. With both standard mirrors disabled, it returns `503 ipfs_disabled`.
 A dedicated S3 reference node has its own operator workflow. Check that node's
